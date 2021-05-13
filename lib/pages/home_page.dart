@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_connection/models/time.dart';
+import 'package:flutter_firebase_connection/pages/time_page.dart';
 import 'home_controller.dart';
 
-class HomePage extends StatelessWidget {
-  final HomeController homeController = new HomeController();
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var homeController;
+
+  @override
+  void initState() {
+    super.initState();
+    homeController = HomeController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +26,23 @@ class HomePage extends StatelessWidget {
       ),
       body: ListView.separated(
         itemCount: homeController.tabela.length,
-        itemBuilder: (BuildContext contexto, int i) {
-          final tabela = homeController.tabela;
+        itemBuilder: (BuildContext contexto, int time) {
+          final List<Time> tabela = homeController.tabela;
           return ListTile(
-            leading: Image.network(tabela[i].brasao),
-            title: Text(tabela[i].nome),
-            trailing: Text(tabela[i].pontos.toString()),
+            leading: Image.network(tabela[time].brasao),
+            title: Text(tabela[time].nome),
+            trailing: Text(tabela[time].pontos.toString()),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TimePage(
+                    key: Key(tabela[time].nome),
+                    time: tabela[time],
+                  ),
+                ),
+              );
+            },
           );
         },
         separatorBuilder: (_, __) => Divider(),
